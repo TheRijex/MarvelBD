@@ -1,8 +1,10 @@
 import { Component } from 'react';
+import Spinner from '../spinner/spinner';
 import MarvelService from '../../services/MarvelService';
 
 import './randomChar.scss';
 import mjolnir from '../../resources/img/mjolnir.png';
+
 
 class RandomChar extends Component {
     constructor(props){
@@ -10,34 +12,28 @@ class RandomChar extends Component {
         this.udateChar();
     }
     state = {
-        name: null,
-        description: null,
-        thumbnail: null,
-        homepage: null,
-        wiki: null
+        char: {},
+        loading: true
     }
 
     marvelService = new MarvelService();
+
+    onCharLoaded = (char) =>{
+        return this.setState({char})
+    }
 
     udateChar = () =>{
         const id = Math.floor(Math.random()*(1011400 - 1011000) + 1011000);
         this.marvelService
             .getCharacter(id)
-            .then(res =>{
-                this.setState({
-                    name: res.data.results[0].name,
-                    description: res.data.results[0].description,
-                    thumbnail: res.data.results[0].thumbnail.path + '.' + res.data.results[0].thumbnail.extension,
-                    homepage: res.data.results[0].urls[0].url,
-                    wiki: res.data.results[0].urls[1].url
-                })
-            }
-
-            )
+            .then(this.onCharLoaded)
     }
 
     render(){
-        const {name, description, thumbnail, homepage, wiki} = this.state;
+        const {char: {name, description, thumbnail, homepage, wiki}, loading} = this.state;
+        if(loading){
+            return <Spinner/>
+        }
         return (
             <div className="randomchar">
                 <div className="randomchar__block">
