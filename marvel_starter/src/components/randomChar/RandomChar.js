@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import Spinner from '../spinner/spinner';
+import Spinner from '../spinner/spinner';   
 import MarvelService from '../../services/MarvelService';
 
 import './randomChar.scss';
